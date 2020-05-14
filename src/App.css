@@ -1,0 +1,109 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  margin-top: 10px;
+  min-height: 50px;
+  margin-bottom: 10px;
+}
+
+.App-header button {
+  vertical-align: middle;
+  height: 30px;
+}
+
+.App-header button img {
+  vertical-align: middle;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+}
+
+.hint {
+  font-size: 14px;
+  font-style: italic;
+  color: gray;
+  margin-right:20px; 
+  margin-left:10px; 
+  margin-top: 15px;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+.App-header input[type=checkbox] {
+  margin-bottom: 8px;
+  vertical-align: bottom;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.container {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#mainLabel {
+  display:inline-block; 
+  margin-right:20px; 
+  font-size: 22px
+} 
+
+#mainInput {
+  display:inline-block; 
+  padding: 5px 5px;
+  min-width: 300px;
+}
+#mainInput3 {
+  display:inline-block; 
+  min-width: 300px;
+}
+
+#mainInput3 textField {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.inputContainer {
+  display: inline-flex;
+}
+
+.inputContainer button {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 7px;
+}
+
+.imageComponent {
+  display:inline-flex;
+  padding: 10px;
+}
+
+.imageThumb {
+  display: inline;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
