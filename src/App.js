@@ -1,10 +1,10 @@
 import React              from 'react';
-import ImageComponent     from './ImageComponent';
 import TextField          from '@material-ui/core/TextField';
 import Button             from '@material-ui/core/Button';
-import FormControlLabel   from '@material-ui/core/FormControlLabel';
-import Checkbox           from '@material-ui/core/Checkbox';
 import StackGrid          from "react-stack-grid";
+
+import SearchDynamicallyControlComponent  from './Components/SearchDynamicallyControlComponent';
+import ImageComponent                     from './Components/ImageComponent';
 
 import './App.css';
 
@@ -31,6 +31,7 @@ class App extends React.Component {
   }
 
   searchDynamicallyChangeHandler(event) {
+    console.log("checkbox changed: "+ event.target.checked);
     this.setState({searchDynamically : event.target.checked, isHintVisible: false})
   }
 
@@ -81,22 +82,18 @@ class App extends React.Component {
 
 
   render() {
+    var loading = !this.state.isLoaded;
+    var resultsLoaded = (!this.state.wasError && this.state.isLoaded);
+
     return (
       <div className="container">
         <header className="App-header">
           <label id="mainLabel">Photo gallery</label>
 
-          {/* search dynamically checkbox */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.searchDynamically}
-                onChange={this.searchDynamicallyChangeHandler}
-                color="primary"
-              />
-            }
-            label="search dynamically"
-          />
+          <SearchDynamicallyControlComponent 
+            key={this.state.searchDynamically}
+            searchDynamically={this.state.searchDynamically} 
+            onChange={this.searchDynamicallyChangeHandler}/>
         </header>
 
         <div className="inputContainer">
@@ -105,10 +102,10 @@ class App extends React.Component {
             margin="dense" variant="outlined"
             onChange={this.searchInputHandler}
           />
-           {!this.state.searchDynamically && 
-          <Button variant="contained" size="medium" color="primary"
-            onClick={this.buttonSubmittedHandler}
-          >
+          {!this.state.searchDynamically && 
+            <Button variant="contained" size="medium" color="primary"
+              onClick={this.buttonSubmittedHandler}
+            >
             Search
           </Button>
           }
@@ -117,33 +114,30 @@ class App extends React.Component {
           </label> 
         </div>
         
-
         <div className="App">
-          {!this.state.isLoaded && <label>Loading...</label>}
+          {loading && <label>Loading...</label>}
 
-          {(!this.state.wasError && this.state.isLoaded) && 
+          {resultsLoaded && 
             <div>
-              <StackGrid classname="imageComponent" 
-                columnWidth={360}
-              >
-                { 
-                  this.state.allImgs.map( resource => 
-                    (
-                      <div key={resource.id}>
-                        
-                        <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
-                      </div>
-                    )
+              <StackGrid columnWidth={355}>
+              { 
+                this.state.allImgs.map( resource => 
+                  (
+                    <div key={resource.id}>
+                      
+                      <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
+                    </div>
                   )
-                } 
+                )
+              } 
               </StackGrid>
             </div>
           }
 
           {this.state.wasError && 
           <div>
-            <label>Sorry, an error appear </label>
-            <ImageComponent imgSrc="./image-big.png"/>
+            <label>Sorry, an error appeared </label>
+            <ImageComponent imgSrc="build\image-placeholder.png"/>
           </div>}
           
         </div>
