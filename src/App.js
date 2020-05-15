@@ -1,8 +1,12 @@
-import React from 'react';
+import React              from 'react';
+import ImageComponent     from './ImageComponent';
+import TextField          from '@material-ui/core/TextField';
+import Button             from '@material-ui/core/Button';
+import FormControlLabel   from '@material-ui/core/FormControlLabel';
+import Checkbox           from '@material-ui/core/Checkbox';
+import StackGrid          from "react-stack-grid";
+
 import './App.css';
-import ImageComponent from './ImageComponent';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
 
 class App extends React.Component {
   
@@ -17,7 +21,7 @@ class App extends React.Component {
         isHintVisible :false,
         searchDynamically : true,
         apiUrl : "https://api.unsplash.com/search/photos?client_id=LiGO4cdLZe7UYuHpFLWU5DTKdIUYIhNdNuenXH9rHjI&query="
-       // apiUrl : "https://api.imgflip.com/get_memes"
+       //apiUrl : "https://api.imgflip.com/get_memes"
     }
     this.searchInputHandler = this.searchInputHandler.bind(this);
     this.searchForPhotos = this.searchForPhotos.bind(this);
@@ -80,15 +84,20 @@ class App extends React.Component {
     return (
       <div className="container">
         <header className="App-header">
-          <label id="mainLabel" >Photo gallery</label>
+          <label id="mainLabel">Photo gallery</label>
 
-          <label className="checkboxLabel"><input type="checkbox" 
-            checked={this.state.searchDynamically} onChange={this.searchDynamicallyChangeHandler}/>
-            search dynamically
-          </label> 
-          
+          {/* search dynamically checkbox */}
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={this.state.searchDynamically}
+                onChange={this.searchDynamicallyChangeHandler}
+                color="primary"
+              />
+            }
+            label="search dynamically"
+          />
         </header>
-
 
         <div className="inputContainer">
           <TextField
@@ -113,13 +122,29 @@ class App extends React.Component {
           {!this.state.isLoaded && <label>Loading...</label>}
 
           {(!this.state.wasError && this.state.isLoaded) && 
-          //<ImageComponent imgSrc={this.state.testData} alt="" />
-            this.state.allImgs.map( resource => <ImageComponent imgSrc={resource.urls.small} alt="" />)
+            <div>
+              <StackGrid classname="imageComponent" 
+                columnWidth={360}
+              >
+                { 
+                  this.state.allImgs.map( resource => 
+                    (
+                      <div key={resource.id}>
+                        
+                        <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
+                      </div>
+                    )
+                  )
+                } 
+              </StackGrid>
+            </div>
           }
 
-
-          {this.state.wasError && <ImageComponent imgSrc="./image-big.png"/>}
-
+          {this.state.wasError && 
+          <div>
+            <label>Sorry, an error appear </label>
+            <ImageComponent imgSrc="./image-big.png"/>
+          </div>}
           
         </div>
       </div>

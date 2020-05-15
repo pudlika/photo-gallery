@@ -6,15 +6,13 @@ class ImageComponent extends React.Component {
         super();
         console.log(props)
 
-        this.state = {imgSrc : props.imgSrc}
+        this.state = {imgSrc : props.imgSrc, alt : props.imgAlt}
     }
 
     render() {
         var url = this.state != null ? this.state.imgSrc : "./image-placeholder.png";
         return(
-            <div className="imageComponent">
-                <img src={url} alt="" width="350" className="imageThumb"/>
-            </div>
+            <img src={url} alt={this.state.alt} width="350" className="imageThumb"/>
         )
     }
 }
