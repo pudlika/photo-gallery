@@ -2,9 +2,13 @@ import React              from 'react';
 import TextField          from '@material-ui/core/TextField';
 import Button             from '@material-ui/core/Button';
 import StackGrid          from "react-stack-grid";
+import FormControlLabel   from '@material-ui/core/FormControlLabel';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 import SearchDynamicallyControlComponent  from './Components/SearchDynamicallyControlComponent';
 import ImageComponent                     from './Components/ImageComponent';
+import ErrorInfoComponent                 from './Components/ErrorInfoComponent';
 
 import './App.css';
 
@@ -26,38 +30,33 @@ class App extends React.Component {
     this.searchInputHandler = this.searchInputHandler.bind(this);
     this.searchForPhotos = this.searchForPhotos.bind(this);
     this.searchDynamicallyChangeHandler = this.searchDynamicallyChangeHandler.bind(this);
-    this.searchForPhotos = this.searchForPhotos.bind(this);
     this.buttonSubmittedHandler = this.buttonSubmittedHandler.bind(this);
-  }
-
-  searchDynamicallyChangeHandler(event) {
-    console.log("checkbox changed: "+ event.target.checked);
-    this.setState({searchDynamically : event.target.checked, isHintVisible: false})
   }
 
   componentDidMount() {
     this.setState({isLoaded: false, wasError: false});
 
-    this.searchForPhotos("lion");
+    this.searchForPhotos("lion", 0);
+  }
+  
+  searchDynamicallyChangeHandler(event) {
+    this.setState({searchDynamically : event.target.checked, isHintVisible: false})
   }
  
   searchInputHandler(event) {
     var phrase = event.target.value;
     this.setState({searchedPhrase: phrase});
-    
-    console.log("searchedPhrase: " + event.target.value +";" + this.state.searchedPhrase + " phrase: "+phrase);
-    console.log(this.state);
 
     if (this.state.searchDynamically) {
       this.setState({isLoaded: false, wasError: false, searchedPhrase: phrase});
-      this.searchForPhotos(phrase);
+      this.searchForPhotos(phrase, 1000);
     }
     else {
       this.setState({isHintVisible: true});
     }
   }
 
-  searchForPhotos(phrase) {
+  searchForPhotos(phrase, delay) {
     fetch(this.state.apiUrl + phrase)
       .then(response => response.json())
       .then(
@@ -65,21 +64,20 @@ class App extends React.Component {
               var results = [];
               results = data.results;
               var url = results.length > 0 ? results[0].urls.small : "./image-big.png"
-              this.setState({isLoaded: true, testData: url, allImgs: results
-          })},
+              this.setState({testData: url, allImgs: results})
+              setTimeout(() => {
+                this.setState({isLoaded: true});
+              }, delay);
+            },
         error => {this.setState({isLoaded: true, testData: "./image-big.png", wasError : true })}
         )
       .catch(e => console.log(e));
   }
 
   buttonSubmittedHandler(event) {
-    console.log("button submitted");
-    console.log("searchedPhrase: " + this.state.searchedPhrase);
-
     this.setState({isLoaded: false, wasError: false});
-    this.searchForPhotos(this.state.searchedPhrase);
+    this.searchForPhotos(this.state.searchedPhrase, 0);
   }
-
 
   render() {
     var loading = !this.state.isLoaded;
@@ -115,17 +113,21 @@ class App extends React.Component {
         </div>
         
         <div className="App">
-          {loading && <label>Loading...</label>}
+          {loading && 
+            <div>
+              <br/><label>Loading...</label><br/><br/>
+              <CircularProgress />
+            </div>
+          }
 
           {resultsLoaded && 
             <div>
-              <StackGrid columnWidth={355}>
+              <StackGrid columnWidth={355} duration={500}> 
               { 
-                this.state.allImgs.map( resource => 
-                  (
+                this.state.allImgs.map( resource => (
                     <div key={resource.id}>
-                      
-                      <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
+                      <ImageComponent imgSrc={resource.urls.small} imgAlt=""
+                        imgHeight={350 * resource.height/resource.width}/>
                     </div>
                   )
                 )
@@ -135,10 +137,8 @@ class App extends React.Component {
           }
 
           {this.state.wasError && 
-          <div>
-            <label>Sorry, an error appeared </label>
-            <ImageComponent imgSrc="build\image-placeholder.png"/>
-          </div>}
+            <ErrorInfoComponent />
+          }
           
         </div>
       </div>

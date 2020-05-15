@@ -1,7 +1,7 @@
 
 import React from 'react';
 import StackGrid from 'react-stack-grid';
-import ImageComponent from './Components/ImageComponent';
+import ImageComponent from './ImageComponent';
 
 class PhotoGridComponent extends React.Component {
 
@@ -9,25 +9,27 @@ class PhotoGridComponent extends React.Component {
         super();
 
         this.state = {
-            imageResources : props.imageResources
+            imageResources : props.resources
         }
     }
 
     render() 
     {
         return(
-            <StackGrid columnWidth={355} 
-            { 
-              this.state.imageResources.map( resource => 
-                (
-                  <div key={resource.id}>
-                    
-                    <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
-                  </div>
+            <div>
+              <StackGrid columnWidth={355} duration={300}>
+              { 
+                this.state.imageResources.map( resource => 
+                  (
+                    <div key={resource.id}>
+                      
+                      <ImageComponent imgSrc={resource.urls.small} imgAlt=""  />
+                    </div>
+                  )
                 )
-              )
-            } 
-            </StackGrid>
+              } 
+              </StackGrid>
+            </div>
         )
     }
 }

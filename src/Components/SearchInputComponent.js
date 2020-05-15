@@ -6,8 +6,6 @@ class SearchInputComponent extends React.Component {
 
     constructor(props) {
         super();
-        console.log("search Input component initializing");
-        console.log(props);
 
         this.state = 
         {
@@ -20,8 +18,6 @@ class SearchInputComponent extends React.Component {
     }
 
     render() {
-        console.log("search Input component rerendered");
-        console.log(this.state);
         return(
             <div className="inputContainer">
                 <TextField
